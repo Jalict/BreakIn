@@ -20,6 +20,7 @@ public class Connector : MonoBehaviour {
 
     public static void AddEntity(string name, Vector3 pos, Quaternion rot, string prefab, string id, bool isStatic) {
         Transform t = ((GameObject)Instantiate(Resources.Load(prefab))).transform;
+        t.gameObject.tag = id;
 
         t.gameObject.AddComponent<NetworkView>();
         t.networkView.viewID = Network.AllocateViewID();
