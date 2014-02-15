@@ -3,18 +3,25 @@ using System.Collections;
 
 public class Connector : MonoBehaviour {
 
+    private bool messaged = false;
     private bool server = false;
     public Transform loader;
 
     void Start() {
         MasterServer.RequestHostList("Break In NGJ2014");
+        Object.DontDestroyOnLoad(this);
 	}
 
     void OnGUI() {
         if (Network.connections.Length > 0)  {
-            transform.root.BroadcastMessage("OnNetworkConnect");
+            if (!messaged) {
+                Application.LoadLevel(1);
+                messaged = true;
+            }
+            server = false;
             return;
         }
+        messaged = false;
 
         GUILayout.BeginVertical();
         if (!server && GUILayout.Button("Host")) {

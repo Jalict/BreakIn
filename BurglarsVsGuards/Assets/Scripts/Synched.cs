@@ -3,18 +3,11 @@ using System.Collections;
 
 public class Synched : MonoBehaviour {
 
-	void Start () {
-        if (Network.isServer) {
-            Network.Instantiate(gameObject, transform.position, transform.rotation, 0);
-        }
-	}
-	
-	void Update () {
-	    
-	}
+    public Transform prefab;
 
-    void OnNetworkConnect() {
-        Debug.Log("Success!!");
+    void OnLevelWasLoaded() {
+        if(Network.isServer && prefab != null)
+            Network.Instantiate(prefab, transform.position, transform.rotation, 0);
         Destroy(gameObject);
     }
 }
