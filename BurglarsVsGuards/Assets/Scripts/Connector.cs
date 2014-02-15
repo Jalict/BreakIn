@@ -3,14 +3,38 @@ using System.Collections;
 
 public class Connector : MonoBehaviour {
 
+    private static Connector instance;
+
     private bool messaged = false;
     private bool server = false;
     public Transform loader;
 
     void Start() {
+        if (!instance) instance = this;
         MasterServer.RequestHostList("Break In NGJ2014");
         Object.DontDestroyOnLoad(this);
+        gameObject.AddComponent<NetworkView>();
+        networkView.stateSynchronization = NetworkStateSynchronization.Off;
+        networkView.observed = null;
 	}
+
+    public static void AddEntity(string name, Vector3 pos, Quaternion rot, string prefab, string id) {
+        Transform t = ((GameObject)Instantiate(Resources.Load<GameObject>(prefab))).transform;
+        t.gameObject.AddComponent<NetworkView>();
+        t.networkView.viewID = Network.AllocateViewID();
+        t.networkView.stateSynchronization = NetworkStateSynchronization.Unreliable;
+        t.networkView.observed = t;
+        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id);
+    }
+
+    [RPC]
+    private void AddStuff(string prefab, string name, NetworkViewID viewid, string id) {
+        Transform t = ((GameObject)Instantiate(Resources.Load<GameObject>(name))).transform;
+        t.gameObject.AddComponent<NetworkView>();
+        t.networkView.stateSynchronization = NetworkStateSynchronization.Unreliable;
+        t.networkView.observed = t;
+        t.networkView.viewID = viewid;
+    }
 
     void OnGUI() {
         if (Network.connections.Length > 0)  {
