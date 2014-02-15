@@ -26,6 +26,8 @@ public class Connector : MonoBehaviour {
         t.networkView.observed = t.transform;
         t.networkView.stateSynchronization = isStatic?NetworkStateSynchronization.Off:NetworkStateSynchronization.Unreliable;
         instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id, isStatic);
+
+        t.name = name;
     }
 
     [RPC]
@@ -35,6 +37,8 @@ public class Connector : MonoBehaviour {
         t.networkView.observed = t.transform;
         t.networkView.stateSynchronization = isStatic ? NetworkStateSynchronization.Off : NetworkStateSynchronization.Unreliable;
         t.networkView.viewID = viewid;
+
+        t.name = name;
     }
 
     void OnGUI() {
