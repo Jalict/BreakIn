@@ -3,7 +3,7 @@ using System.Collections;
 
 public class movement : MonoBehaviour {
 
-	public CameraScript CamScript;
+	//public CameraScript CamScript;
 
     Vector3 MoveVector;
 	public float Speed = 1;
