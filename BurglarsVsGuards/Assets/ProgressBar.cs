@@ -25,9 +25,5 @@ public class ProgressBar : MonoBehaviour {
 	    renderer.enabled = true;
 
 		progressTime = newTime;
-<<<<<<< HEAD
-=======
-        //print(progressTime);
->>>>>>> Thief pickup icon
 	}
 }
