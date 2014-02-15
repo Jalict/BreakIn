@@ -3,7 +3,9 @@ using System.Collections;
 
 public class movement : MonoBehaviour {
 
-	Vector3 MoveVector;
+	public CameraScript CamScript;
+
+    Vector3 MoveVector;
 	public float Speed = 1;
     public float turnSpeed = 0.3f;
 
@@ -11,7 +13,7 @@ public class movement : MonoBehaviour {
 	public bool continuousScan = true;
 	
 	// the player we want to observe
-	public OuyaPlayer observedPlayer = OuyaPlayer.P01;
+	public OuyaPlayer observedPlayer;
 	
 	// the type of deadzone we want to use for convenience access
 	public DeadzoneType deadzoneType = DeadzoneType.CircularMap;
@@ -40,14 +42,17 @@ public class movement : MonoBehaviour {
         OuyaInput.UpdateControllers();
 
 
-		MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, OuyaPlayer.P01),
-            OuyaInput.GetAxis(OuyaAxis.LY, OuyaPlayer.P01),
+		MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer),
+            OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer),
             0);
-        transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
+        rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer) * Speed * Time.deltaTime,
+                                       OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer) * Speed * Time.deltaTime));
+
+        //transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
         //print(MoveVector);
 
-        Vector3 LookVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.RX, OuyaPlayer.P01),
-            OuyaInput.GetAxis(OuyaAxis.RY, OuyaPlayer.P01),
+        Vector3 LookVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.RX, observedPlayer),
+            OuyaInput.GetAxis(OuyaAxis.RY, observedPlayer),
             0);
 
 
