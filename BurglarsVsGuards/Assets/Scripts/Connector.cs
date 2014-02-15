@@ -41,6 +41,8 @@ public class Connector : MonoBehaviour {
 
         if (id == "Player") {
             t.GetComponent<movement>().enabled = false;
+            t.GetComponent<FOV2DVisionCone>().enabled = false;
+            t.GetComponent<FOV2DEyes>().enabled = false;
         }
 
         t.name = name;
