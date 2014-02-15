@@ -5,6 +5,7 @@ public class movement : MonoBehaviour {
 
 	Vector3 MoveVector;
 	public float Speed = 1;
+    public float turnSpeed = 0.3f;
 
 		// do we want to scan for trigger and d-pad button events ?
 	public bool continuousScan = true;
@@ -59,7 +60,8 @@ public class movement : MonoBehaviour {
 
         LookVector.z = transform.position.z;
 
-        transform.LookAt(transform.position + LookVector,transform.up);
+        if(LookVector.magnitude > 0)
+            transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(transform.eulerAngles.z,Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg,turnSpeed));
 
 	}
 }
