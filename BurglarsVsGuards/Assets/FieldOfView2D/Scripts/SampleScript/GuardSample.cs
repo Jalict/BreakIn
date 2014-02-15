@@ -25,7 +25,7 @@ public class GuardSample : MonoBehaviour
 	
 	void Update()
 	{
-		bool playerInView = false;
+		/*bool playerInView = false;
 		
 		foreach (RaycastHit hit in eyes.hits)
 		{
@@ -42,6 +42,6 @@ public class GuardSample : MonoBehaviour
 		else
 		{
 			visionCone.status = FOV2DVisionCone.Status.Idle;
-		}
+		}*/
 	}
 }

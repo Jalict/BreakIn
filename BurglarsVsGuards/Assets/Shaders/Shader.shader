@@ -2,13 +2,17 @@
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Color ("Color", Color) = (0.3,0.3,0.3,1)
+		_Hidden ("Hidden", Color) = (0.1,0.1,0.1,1)
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" "Queue"="Geometry+3" }
 		LOD 200
 		
 		Pass {
-		
+			Material {
+                Diffuse [_Hidden]
+            }
+			Lighting off
 		}
 		Pass {
 			Stencil {
