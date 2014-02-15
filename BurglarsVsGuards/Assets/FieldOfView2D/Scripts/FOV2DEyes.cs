@@ -37,7 +37,7 @@ public class FOV2DEyes : MonoBehaviour
 		
 		for (int i = 0; i < numRays; i++)
 		{
-			direction = Quaternion.AngleAxis(currentAngle, transform.up) * transform.forward;
+			direction = Quaternion.AngleAxis(currentAngle, transform.right) * transform.forward;
 			hit = new RaycastHit();
 			
 			if(Physics.Raycast(transform.position, direction, out hit, fovMaxDistance, cullingMask) == false)

@@ -5,7 +5,8 @@ public class FogZone : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        renderer.enabled = false;
+        if(!Network.isServer)
+            renderer.enabled = false;
 	}
 	
 	// Update is called once per frame
