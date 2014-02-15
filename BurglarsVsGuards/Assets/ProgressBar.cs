@@ -25,6 +25,5 @@ public class ProgressBar : MonoBehaviour {
 	    renderer.enabled = true;
 
 		progressTime = newTime;
-        print(progressTime);
 	}
 }
