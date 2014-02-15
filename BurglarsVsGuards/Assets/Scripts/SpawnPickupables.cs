@@ -4,7 +4,7 @@ using System.Collections;
 public class SpawnPickupables : MonoBehaviour
 {
 
-    public Transform[] SpawnPoints;
+    public GameObject[] SpawnPoints;
     public GameObject[] Pickupables;
 
     // Use this for initialization
@@ -18,17 +18,22 @@ public class SpawnPickupables : MonoBehaviour
 
             if (Network.connections.Length > 0)
             {
-                Connector.AddEntity(Pickupables[random].name, SpawnPoints[i].position, Quaternion.identity, path,
+                Connector.AddEntity(Pickupables[random].name, SpawnPoints[i].transform.position, Quaternion.identity, path,
                                     "Untagged",
                                     true);
             }
 
             else
             {
-                GameObject o = (GameObject)Instantiate(Resources.Load(path), SpawnPoints[i].position, Quaternion.identity);
-                o.name = "bla";
+                GameObject o = (GameObject)Instantiate(Resources.Load(path), SpawnPoints[i].transform.position, Quaternion.identity);
+                o.name = "PropToPickUp";
 
             }
+        }
+
+        for (int i = 0; i < SpawnPoints.Length; i++)
+        {
+            Destroy(SpawnPoints[i]);
         }
     }
 }
