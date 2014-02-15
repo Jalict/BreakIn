@@ -39,6 +39,10 @@ public class Connector : MonoBehaviour {
         t.networkView.stateSynchronization = isStatic ? NetworkStateSynchronization.Off : NetworkStateSynchronization.Unreliable;
         t.networkView.viewID = viewid;
 
+        if (id == "Player") {
+            t.GetComponent<movement>().enabled = false;
+        }
+
         t.name = name;
     }
 
