@@ -12,9 +12,16 @@ public class ThiefStorage : MonoBehaviour
 
     private bool readyToPickup = false;
 
+    public GameObject progressBar;
+
+    private GameObject progress;
+
     // Use this for initialization
     private void Start()
     {
+
+        progress = null;
+
 
         Movement = gameObject.GetComponent<movement>();
 
@@ -57,11 +64,31 @@ public class ThiefStorage : MonoBehaviour
         // close enough?
         if (Vector2.Distance(transform.position, currentProp.transform.position) < 5)
         {
+
             // start picking up
+            if (OuyaInput.GetButtonDown(OuyaButton.RB, Movement.observedPlayer))
+            {
+                Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
+
+                progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
+            }
+
+            if (OuyaInput.GetButtonUp(OuyaButton.RB, Movement.observedPlayer))
+            {
+                if (progress != null)
+                {
+                    pickupCounterTime = 0;
+                    Destroy(progress);
+                }
+            }
+
             if (OuyaInput.GetButton(OuyaButton.RB, Movement.observedPlayer))
             {
                 pickupCounterTime += Time.deltaTime;
-                print(pickupCounterTime);
+                
+                if (progress != null)
+                    progress.GetComponent<ProgressBar>().SetProgressTime(pickupCounterTime / currentProp.GetComponent<PropsToPickUp>().PickupTime);
+                //print(pickupCounterTime);
 
                 // pickup time reached
                 if (pickupCounterTime >= currentProp.GetComponent<PropsToPickUp>().PickupTime)
