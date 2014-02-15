@@ -52,10 +52,12 @@ public class Connector : MonoBehaviour {
         }
         messaged = false;
 
+        GUILayout.Space(5);
         GUILayout.BeginVertical();
+        GUILayout.Space(5);
         if (!server && GUILayout.Button("Host")) {
             Debug.Log("Hosting...");
-            Network.InitializeServer(8, 3428, !Network.HavePublicAddress());
+            Network.InitializeServer(8, 3428, true);
             MasterServer.RegisterHost("Break In NGJ2014", Random.value.ToString());
             server = true;
         }
