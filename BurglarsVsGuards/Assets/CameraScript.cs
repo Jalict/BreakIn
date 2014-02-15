@@ -30,7 +30,10 @@ public class CameraScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		
+
+	    if (Input.GetKeyDown(KeyCode.R))
+	        Application.LoadLevel(0);
+
 		//Camera size and position depending on players
 		if(Players.Count == 2)
 		{
