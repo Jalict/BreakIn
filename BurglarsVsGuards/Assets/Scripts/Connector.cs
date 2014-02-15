@@ -1,17 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Run : MonoBehaviour {
+public class Connector : MonoBehaviour {
+
+    private bool server = false;
+    public Transform loader;
 
     void Start() {
         MasterServer.RequestHostList("Break In NGJ2014");
 	}
 
     void OnGUI() {
+        if (Network.connections.Length > 0)  {
+            transform.root.BroadcastMessage("OnNetworkConnect");
+            return;
+        }
+
         GUILayout.BeginVertical();
-        if (GUILayout.Button("Host")) {
+        if (!server && GUILayout.Button("Host")) {
+            Debug.Log("Hosting...");
             Network.InitializeServer(8, 3428, !Network.HavePublicAddress());
-            MasterServer.RegisterHost("Break In NGJ2014", name);
+            MasterServer.RegisterHost("Break In NGJ2014", Random.value.ToString());
+            server = true;
         }
         HostData[] data = MasterServer.PollHostList();
 
@@ -32,9 +42,9 @@ public class Run : MonoBehaviour {
 		    GUILayout.FlexibleSpace();
 		    if (GUILayout.Button("Connect"))
 		    {
-			    Network.Connect(element);			
+			    Network.Connect(element);
 		    }
-		    GUILayout.EndHorizontal();	
+		    GUILayout.EndHorizontal();
 	    }
         GUILayout.EndVertical();
     }

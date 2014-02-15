@@ -3,13 +3,18 @@ using System.Collections;
 
 public class Synched : MonoBehaviour {
 
-	// Use this for initialization
 	void Start () {
-	
+        if (Network.isServer) {
+            Network.Instantiate(gameObject, transform.position, transform.rotation, 0);
+        }
 	}
 	
-	// Update is called once per frame
 	void Update () {
-	
+	    
 	}
+
+    void OnNetworkConnect() {
+        Debug.Log("Success!!");
+        Destroy(gameObject);
+    }
 }
