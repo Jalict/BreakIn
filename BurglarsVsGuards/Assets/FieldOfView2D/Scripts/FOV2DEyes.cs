@@ -17,6 +17,8 @@ public class FOV2DEyes : MonoBehaviour
 	float currentAngle;
 	Vector3 direction;
 	RaycastHit hit;
+
+    List<GameObject> visibleProps = new List<GameObject>(); 
 	
 	void Update()
 	{
@@ -30,24 +32,43 @@ public class FOV2DEyes : MonoBehaviour
 	
 	void CastRays()
 	{
-		numRays = fovAngle * quality;
+	    numRays = fovAngle* quality;
 		currentAngle = fovAngle / -2;
 		
 		hits.Clear();
+	    
+        // make all objects invisible
+        foreach (GameObject g in visibleProps)
+	    {
+	        g.renderer.enabled = false;
+	    }
+        visibleProps.Clear();
 		
 		for (int i = 0; i < numRays; i++)
 		{
 			direction = Quaternion.AngleAxis(currentAngle, transform.up) * transform.forward;
 			hit = new RaycastHit();
 			
-			if(Physics.Raycast(transform.position, direction, out hit, fovMaxDistance, cullingMask) == false)
+			if(Physics.Raycast(transform.position, direction, out hit, fovMaxDistance, cullingMask))
 			{
-				hit.point = transform.position + (direction * fovMaxDistance);
+
+                // add to list of visible objects
+                if (!visibleProps.Contains(hit.transform.gameObject))
+                    visibleProps.Add(hit.transform.gameObject);
+			    
+			    hit.point = transform.position + (direction * fovMaxDistance);
 			}
 			
 			hits.Add(hit);
 
 			currentAngle += 1f / quality;
+
+            // make all visible props render
+            foreach (GameObject g in visibleProps)
+            {
+                g.renderer.enabled = true;
+            }
+
 		}
 	}
 	

@@ -36,15 +36,14 @@ public class movement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		OuyaInput.UpdateControllers();
+        OuyaInput.UpdateControllers();
+
+
 		MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, OuyaPlayer.P01),
             OuyaInput.GetAxis(OuyaAxis.LY, OuyaPlayer.P01),
             0);
-        //transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
-        //Rigidbody2D.velocity = MoveVector;
-        rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, OuyaPlayer.P01),
-            OuyaInput.GetAxis(OuyaAxis.LY, OuyaPlayer.P01))*Speed);
-        print(MoveVector);
+        transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
+        //print(MoveVector);
 
         Vector3 LookVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.RX, OuyaPlayer.P01),
             OuyaInput.GetAxis(OuyaAxis.RY, OuyaPlayer.P01),

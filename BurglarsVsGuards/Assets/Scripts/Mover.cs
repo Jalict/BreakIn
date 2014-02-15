@@ -41,8 +41,8 @@ public class Mover : MonoBehaviour
 
 
         Vector3 MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer),
-            OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer),
-            0);
+            0,
+            OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer));
 
         transform.Translate(MoveVector * Speed * Time.deltaTime);
 	}
