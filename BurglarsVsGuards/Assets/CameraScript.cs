@@ -22,10 +22,10 @@ public class CameraScript : MonoBehaviour {
 		
 	}
 	
-	//void OnApplicationQuit()
-	//{
-	//	OuyaInput.ResetInput();
-	//}
+	void OnApplicationQuit()
+	{
+		OuyaInput.ResetInput();
+	}
 
 	// Update is called once per frame
 	void Update ()
@@ -63,6 +63,6 @@ public class CameraScript : MonoBehaviour {
 			zoomTime -= Time.deltaTime*2;
 		}
 		camera.orthographicSize = Mathf.Lerp(distanceBetweenPlayers*0.5f+extraViewDistance,25,zoomTime);
-		print(distanceBetweenPlayers);
+		//print(distanceBetweenPlayers);
 	}
 }

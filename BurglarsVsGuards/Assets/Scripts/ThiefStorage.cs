@@ -10,6 +10,8 @@ public class ThiefStorage : MonoBehaviour
     public GameObject currentProp = null;
     private float pickupCounterTime = 0;
 
+    private bool readyToPickup = false;
+
     // Use this for initialization
     private void Start()
     {
@@ -26,7 +28,14 @@ public class ThiefStorage : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (readyToPickup)
+            StartPickupProp();
 
+        /*for (int i = 0; i < 3; i++)
+        {
+            if (Inventory[i] != null)
+                print("2");
+        }*/
     }
 
     void StartPickupProp()
@@ -38,10 +47,13 @@ public class ThiefStorage : MonoBehaviour
             if (Inventory[i] == null) // pickup if empty slot
                 availableSlots = true;
         }
-        if (availableSlots == false)
+
+
+        if (currentProp.GetComponent<PropsToPickUp>().CanBePickedUp == false
+        || (availableSlots == false))
             return;
 
-
+        
         // close enough?
         if (Vector2.Distance(transform.position, currentProp.transform.position) < 5)
         {
@@ -68,25 +80,34 @@ public class ThiefStorage : MonoBehaviour
                     {
                         Inventory[availableSlot] = currentProp;
                         currentProp.GetComponent<PropsToPickUp>().CanBePickedUp = false;
+                        currentProp.GetComponent<PropsToPickUp>().HasBeenPickedUp = true;
+
+                        pickupCounterTime = 0;
                     }
                 }
             }
         }
+        else
+            pickupCounterTime = 0;
     }
 
-    void OnCollisionEnter2D(Collision2D coll)
+    private void OnCollisionEnter2D(Collision2D coll)
     {
-
         // check to see if it's a pickupable prop
         if ((coll.gameObject.GetComponent("PropsToPickUp") as PropsToPickUp) != null)
         {
             if (coll.gameObject.GetComponent<PropsToPickUp>().CanBePickedUp)
+            {
                 currentProp = coll.gameObject;
-        }
-        else
-        {
-            currentProp = null;
-            return;
+                readyToPickup = true;
+            }
+            else
+            {
+                currentProp = null;
+                readyToPickup = false;
+
+                return;
+            }
         }
     }
 
