@@ -19,12 +19,13 @@ public class Connector : MonoBehaviour {
 	}
 
     public static void AddEntity(string name, Vector3 pos, Quaternion rot, string prefab, string id) {
+        NetworkViewID vid = Network.AllocateViewID();
         Transform t = ((GameObject)Instantiate(Resources.Load<GameObject>(prefab))).transform;
         t.gameObject.AddComponent<NetworkView>();
-        t.networkView.viewID = Network.AllocateViewID();
+        t.networkView.viewID = vid;
         t.networkView.stateSynchronization = NetworkStateSynchronization.Unreliable;
         t.networkView.observed = t;
-        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id);
+        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, vid, id);
     }
 
     [RPC]
