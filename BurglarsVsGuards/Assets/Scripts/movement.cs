@@ -8,6 +8,7 @@ public class movement : MonoBehaviour {
     Vector3 MoveVector;
 	public float Speed = 1;
     public float turnSpeed = 0.3f;
+    bool hiding = false;
 
 		// do we want to scan for trigger and d-pad button events ?
 	public bool continuousScan = true;
@@ -23,7 +24,13 @@ public class movement : MonoBehaviour {
 	public float triggerThreshold = 0.1f;
 
 	// Use this for initialization
-	void Start ()
+	
+    public void SetHiding (bool newState)
+    {
+        hiding = newState;
+    }
+
+    void Start ()
     {
         // set button state scanning to receive input state events for trigger and d-pads
         OuyaInput.SetContinuousScanning(continuousScan);
@@ -45,7 +52,7 @@ public class movement : MonoBehaviour {
 		MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer),
             OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer),
             0);
-        rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer) * Speed * Time.deltaTime,
+        if(!hiding) rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer) * Speed * Time.deltaTime,
                                        OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer) * Speed * Time.deltaTime));
 
         //transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
@@ -65,7 +72,7 @@ public class movement : MonoBehaviour {
 
         LookVector.z = transform.position.z;
 
-        if(LookVector.magnitude > 0.3f)
+        if(LookVector.magnitude > 0)
             transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(transform.eulerAngles.z,Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg,turnSpeed));
 
 	}

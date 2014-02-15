@@ -19,25 +19,29 @@ public class Connector : MonoBehaviour {
 	}
 
     public static void AddEntity(string name, Vector3 pos, Quaternion rot, string prefab, string id, bool isStatic) {
-        Transform t = ((GameObject)Instantiate(Resources.Load(prefab))).transform;
+        Transform t = ((GameObject)Instantiate(Resources.Load(prefab),pos,rot)).transform;
         t.gameObject.tag = id;
 
         t.gameObject.AddComponent<NetworkView>();
         t.networkView.viewID = Network.AllocateViewID();
         t.networkView.observed = t.transform;
         t.networkView.stateSynchronization = isStatic?NetworkStateSynchronization.Off:NetworkStateSynchronization.Unreliable;
-        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id, isStatic);
+        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id, isStatic, pos, rot);
 
         t.name = name;
     }
 
     [RPC]
-    private void AddStuff(string prefab, string name, NetworkViewID viewid, string id, bool isStatic) {
-        Transform t = ((GameObject)Instantiate(Resources.Load(prefab))).transform;
+    private void AddStuff(string prefab, string name, NetworkViewID viewid, string id, bool isStatic, Vector3 pos, Quaternion rot) {
+        Transform t = ((GameObject)Instantiate(Resources.Load(prefab),pos,rot)).transform;
         t.gameObject.AddComponent<NetworkView>();
         t.networkView.observed = t.transform;
         t.networkView.stateSynchronization = isStatic ? NetworkStateSynchronization.Off : NetworkStateSynchronization.Unreliable;
         t.networkView.viewID = viewid;
+
+        if (id == "Player") {
+            t.GetComponent<movement>().enabled = false;
+        }
 
         t.name = name;
     }

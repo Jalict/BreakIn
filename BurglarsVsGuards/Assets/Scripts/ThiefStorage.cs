@@ -15,13 +15,17 @@ public class ThiefStorage : MonoBehaviour
     private bool readyToPickup = false;
 
     public GameObject progressBar;
+    public GameObject RBButton;
 
     private GameObject progress;
+    private GameObject ActionButton;
 
     public Transform[] PickupDisplayIcons = new Transform[3];
     public Vector3[] Offset = new Vector3[3];
 
     public int ThiefScore = 0;
+
+    bool myRBButtonIsReady = true;
 
     // Use this for initialization
     private void Start()
@@ -34,6 +38,9 @@ public class ThiefStorage : MonoBehaviour
         Offset[2] = new Vector3(0.4f, -0.81f, 0);
 
         Movement = gameObject.GetComponent<movement>();
+
+        ActionButton = (GameObject)Instantiate(RBButton, transform.position, Quaternion.identity);
+        ActionButton.transform.renderer.enabled = false;
 
         if (PickupDisplayIcons[2] == null)
             Debug.Log("ERROR - needs PickupDisplayIcons");

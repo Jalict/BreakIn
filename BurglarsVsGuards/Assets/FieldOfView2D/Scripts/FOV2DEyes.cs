@@ -37,7 +37,7 @@ public class FOV2DEyes : MonoBehaviour
 		
 		for (int i = 0; i < numRays; i++)
 		{
-			direction = Quaternion.AngleAxis(currentAngle, transform.right) * transform.forward;
+			direction = Quaternion.AngleAxis(currentAngle, -transform.forward) * transform.right;
 			hit = new RaycastHit();
 			
 			if(Physics.Raycast(transform.position, direction, out hit, fovMaxDistance, cullingMask) == false)
@@ -51,7 +51,7 @@ public class FOV2DEyes : MonoBehaviour
 		}
 	}
 	
-	void OnDrawGizmosSelected()
+	void OnDrawGizmos()
 	{
 		Gizmos.color = Color.cyan;
 		
