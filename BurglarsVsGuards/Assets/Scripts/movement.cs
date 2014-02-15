@@ -65,7 +65,7 @@ public class movement : MonoBehaviour {
 
         LookVector.z = transform.position.z;
 
-        if(LookVector.magnitude > 0)
+        if(LookVector.magnitude > 0.3f)
             transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(transform.eulerAngles.z,Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg,turnSpeed));
 
 	}
