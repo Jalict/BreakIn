@@ -385,7 +385,7 @@ public class HideNSteal : MonoBehaviour
             return;
         
         // close enough?
-        if (Vector2.Distance(transform.position, currentProp.transform.position) < 2)
+        if (Vector2.Distance(transform.position, currentProp.transform.position) < (currentProp.transform.localScale.x+currentProp.transform.localScale.y)/2)
         {
             //ActionButton.transform.renderer.enabled = true;
             // start hiding
