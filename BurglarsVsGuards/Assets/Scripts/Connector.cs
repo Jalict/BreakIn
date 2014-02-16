@@ -57,8 +57,10 @@ public class Connector : MonoBehaviour {
 
         if (id == "Player") {
             t.GetComponent<movement>().enabled = false;
-            t.GetComponentInChildren<FOV2DVisionCone>().enabled = false;
-            t.GetComponentInChildren<FOV2DEyes>().enabled = false;
+            foreach (FOV2DVisionCone cone in t.GetComponentsInChildren<FOV2DVisionCone>())
+                Destroy(cone.gameObject, 1);
+            foreach (FOV2DEyes eyes in t.GetComponentsInChildren<FOV2DEyes>())
+                Destroy(eyes.gameObject, 1);
         }
 
         t.name = name;
