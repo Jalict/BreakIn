@@ -70,7 +70,7 @@ public class movement : MonoBehaviour {
         //Quaternion rotation = Quaternion.LookRotation(LookVector);
         //transform.rotation = rotation;
 
-        LookVector.z = transform.position.z;
+        //LookVector.z = transform.position.z;
 
         if(LookVector.magnitude > 0)
             transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(transform.eulerAngles.z,Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg,turnSpeed));

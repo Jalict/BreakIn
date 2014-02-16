@@ -57,8 +57,8 @@ public class Connector : MonoBehaviour {
 
         if (id == "Player") {
             t.GetComponent<movement>().enabled = false;
-            t.GetComponent<FOV2DVisionCone>().enabled = false;
-            t.GetComponent<FOV2DEyes>().enabled = false;
+            t.GetComponentInChildren<FOV2DVisionCone>().enabled = false;
+            t.GetComponentInChildren<FOV2DEyes>().enabled = false;
         }
 
         t.name = name;
@@ -97,29 +97,32 @@ public class Connector : MonoBehaviour {
         GUILayout.Space(15);
         ipconnect = GUILayout.TextField(ipconnect);
         GUILayout.EndHorizontal();
-        HostData[] data = MasterServer.PollHostList();
 
-	    foreach(HostData element in data)
-	    {
-		    GUILayout.BeginHorizontal();	
-		    string name = element.gameName + " " + element.connectedPlayers + " / " + element.playerLimit;
-		    GUILayout.Label(name);	
-		    GUILayout.Space(5);
-		    string hostInfo = "[";
-		    foreach (string host in element.ip)
-			    hostInfo = hostInfo + host + ":" + element.port + " ";
-		    hostInfo = hostInfo + "]";
-		    GUILayout.Label(hostInfo);	
-		    GUILayout.Space(5);
-		    GUILayout.Label(element.comment);
-		    GUILayout.Space(5);
-		    GUILayout.FlexibleSpace();
-		    if (GUILayout.Button("Connect"))
-		    {
-			    Network.Connect(element);
-		    }
-		    GUILayout.EndHorizontal();
-	    }
+        try {
+            HostData[] data = MasterServer.PollHostList();
+
+            foreach (HostData element in data) {
+                GUILayout.BeginHorizontal();
+                string name = element.gameName + " " + element.connectedPlayers + " / " + element.playerLimit;
+                GUILayout.Label(name);
+                GUILayout.Space(5);
+                string hostInfo = "[";
+                foreach (string host in element.ip)
+                    hostInfo = hostInfo + host + ":" + element.port + " ";
+                hostInfo = hostInfo + "]";
+                GUILayout.Label(hostInfo);
+                GUILayout.Space(5);
+                GUILayout.Label(element.comment);
+                GUILayout.Space(5);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Connect")) {
+                    Network.Connect(element);
+                }
+                GUILayout.EndHorizontal();
+            }
+        } catch (System.Exception ex) {
+            Debug.Log(ex);
+        }
         GUILayout.EndVertical();
     }
 }
