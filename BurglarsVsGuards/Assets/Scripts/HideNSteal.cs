@@ -35,7 +35,7 @@ public class HideNSteal : MonoBehaviour
     private GameObject progress;
     private GameObject ActionButton;
 
-    public Transform[] PickupDisplayIcons = new Transform[3];
+    public GameObject[] PickupDisplayIcons = new GameObject[3];
     public Vector3[] Offset = new Vector3[3];
 
     public int ThiefScore = 0;
@@ -56,11 +56,32 @@ public class HideNSteal : MonoBehaviour
         Offset[1] = new Vector3(-0f, -0.81f, 0);
         Offset[2] = new Vector3(0.4f, -0.81f, 0);
 
+    	string path = "Prefabs/" + PickupDisplayIcons[0].name;
+		if (Network.connections.Length > 0)
+        {
+            for(int i = 0; i < 3; i++)
+            {
+            	PickupDisplayIcons[i] = (GameObject) Connector.AddEntityReturn(PickupDisplayIcons[i].name, transform.position, Quaternion.identity, path,
+                                "Untagged",
+                                false);
+            	PickupDisplayIcons[i].layer = 4;
+            }
+        }
+
+        else
+        {
+            for(int i = 0; i < 3;i++)
+            {
+            	PickupDisplayIcons[i] = (GameObject)Instantiate(Resources.Load(path), transform.position, Quaternion.identity);
+            	PickupDisplayIcons[i].name = "PickupDisplayIcons";
+            }
+            
+        }
+
         Movement = gameObject.GetComponent<movement>();
 
         ActionButton = (GameObject)Instantiate(RBButton, transform.position, Quaternion.identity);
         ActionButton.transform.renderer.enabled = false;
-        Debug.Log("This one");
 
         if (PickupDisplayIcons[2] == null)
             Debug.Log("ERROR - needs PickupDisplayIcons");

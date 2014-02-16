@@ -31,6 +31,21 @@ public class Connector : MonoBehaviour {
         t.name = name;
     }
 
+    public static GameObject AddEntityReturn(string name, Vector3 pos, Quaternion rot, string prefab, string id, bool isStatic)
+    {
+        GameObject t = ((GameObject)Instantiate(Resources.Load(prefab),pos,rot));
+        t.gameObject.tag = id;
+
+        t.AddComponent<NetworkView>();
+        t.transform.networkView.viewID = Network.AllocateViewID();
+        t.transform.networkView.observed = t.transform;
+        t.transform.networkView.stateSynchronization = isStatic?NetworkStateSynchronization.Off:NetworkStateSynchronization.Unreliable;
+        instance.networkView.RPC("AddStuff", RPCMode.OthersBuffered, prefab, name, t.networkView.viewID, id, isStatic, pos, rot);
+
+        t.name = name;
+        return t;
+    }
+
     [RPC]
     private void AddStuff(string prefab, string name, NetworkViewID viewid, string id, bool isStatic, Vector3 pos, Quaternion rot) {
         Transform t = ((GameObject)Instantiate(Resources.Load(prefab),pos,rot)).transform;
