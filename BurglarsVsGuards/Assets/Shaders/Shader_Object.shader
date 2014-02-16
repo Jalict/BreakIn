@@ -1,8 +1,7 @@
 ﻿Shader "Custom/Shader Object" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_Color ("Color", Color) = (0.3,0.3,0.3,1)
-		_Hidden ("Hidden", Color) = (0.1,0.1,0.1,1)
+		_Color ("Color", Color) = (1,1,1,1)
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" "Queue"="Geometry+3" }
@@ -23,13 +22,14 @@
 			#include "UnityCG.cginc"
 
 			uniform sampler2D _MainTex;
+			uniform float4 _Color;
 
 			float4 frag(v2f_img i) : COLOR {
 				float4 c = tex2D(_MainTex, i.uv);
 				if(c.a < 0.5f){
 					discard;
 				}
-				return c;
+				return c*_Color;
 			}
 			ENDCG
 		}
