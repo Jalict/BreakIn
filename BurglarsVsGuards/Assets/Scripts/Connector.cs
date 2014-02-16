@@ -8,6 +8,7 @@ public class Connector : MonoBehaviour {
     private bool messaged = false;
     private bool server = false;
     public Transform loader;
+    private string ipconnect = "";
 
     void Start() {
         if (!instance) instance = this;
@@ -68,6 +69,12 @@ public class Connector : MonoBehaviour {
             MasterServer.RegisterHost("Break In NGJ2014", Random.value.ToString());
             server = true;
         }
+        GUILayout.Space(10);
+        if (GUILayout.Button("Join IP: ")) {
+            Network.Connect(ipconnect, 3428);
+        }
+        GUILayout.Space(15);
+        ipconnect = GUILayout.TextField(ipconnect);
         HostData[] data = MasterServer.PollHostList();
 
 	    foreach(HostData element in data)
