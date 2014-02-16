@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GuardScript : MonoBehaviour
 	{
-
+		public GUIStyle style;
 		GameObject currentProp = null;
 		propTypes currentPropType;
 		GameObject CurrentPropToTaze = null;
@@ -22,6 +22,9 @@ public class GuardScript : MonoBehaviour
 
     	bool myRBButtonIsReady = true;
 
+    	static int totalDeath = 0;
+    	static bool showingDeathScreen = false;
+
 
 	// Use this for initialization
 	void Awake ()
@@ -38,6 +41,16 @@ public class GuardScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if(totalDeath > 1)
+		{
+			if(!showingDeathScreen)
+			{
+				showingDeathScreen = true;
+				//ShowDeathScreen();
+			}
+			
+		}
+
 		if(readyToTaze && currentPropType == propTypes.thief && currentProp != null)
 		{			
 			if(Vector2.Distance(transform.position, currentProp.transform.position) < 2)
@@ -71,7 +84,7 @@ public class GuardScript : MonoBehaviour
         		        if(tazing)
         		        {
         		        	tazing = false;
-        		        	thiefScript.KillFromTaze();
+        		        	thiefScript.KillFromTaze(this);
         		        	currentProp = null;
                 			currentPropType = propTypes.nothing;
                 			readyToTaze = false;
@@ -111,6 +124,16 @@ public class GuardScript : MonoBehaviour
 			}
 			
 		}
+	}
+
+	void OnGUI()
+	{
+		if(showingDeathScreen)GUI.Label(new Rect (Screen.width/2, Screen.height/2, 200,200),"The Burglars FAILED!",style);
+	}
+
+	public void DeathCount()
+	{
+		totalDeath++;
 	}
 
 	private void OnTriggerEnter2D(Collider2D coll)
