@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class CameraScript : MonoBehaviour {
 
+    public AudioClip music;
 	public Transform targetPlayer;
 	Vector3 newPosition;
 	float currentCameraSize = 5;
@@ -19,7 +20,12 @@ public class CameraScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-	
+        if (music != null) {
+            AudioSource source = gameObject.AddComponent<AudioSource>();
+            source.clip = music;
+            source.loop = true;
+            source.Play(1);
+        }
 	}
 	
 	void OnApplicationQuit()
