@@ -331,6 +331,12 @@ public class HideNSteal : MonoBehaviour
     	beingTazed = true;
     	StartCoroutine(BeingTased());
     }
+    [RPC]
+    public void NetGettingTazed(bool newState)
+    {
+    	beingTazed = true;
+    	StartCoroutine(BeingTased());
+    }
 
     void BeingTazed(bool state)
     {
@@ -345,6 +351,29 @@ public class HideNSteal : MonoBehaviour
         StartCoroutine(BeingTased());
     }
 
+    [RPC]
+    public void NetKillFromTaze()
+    {
+    	if(!beingTazed) return;
+    	string path = "Prefabs/" + Bloodpool.name;
+    	if (Network.connections.Length > 0)
+    	{
+    		Connector.AddEntityReturn(Bloodpool.name, transform.position - new Vector3(0,0,3), Quaternion.identity, path,
+                                "Untagged",
+                                true);
+    	}else
+    	{
+    		Instantiate(Resources.Load(path), transform.position - new Vector3(0,0,3), Quaternion.identity);
+    	}
+    	
+    	//this.renderer.enabled = false;
+    	//this.collider2D.isTrigger = true;
+    	//print("Han er døøøøø'");
+    	thievesAlive--;
+    	Destroy(progress);
+    	Destroy(ActionButton);
+    	Destroy(gameObject);
+    }
     public void KillFromTaze(GuardScript GS)
     {
     	if(!beingTazed) return;

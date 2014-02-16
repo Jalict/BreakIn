@@ -94,6 +94,8 @@ public class GuardScript : MonoBehaviour
         		    ActionButton.transform.renderer.enabled = false;
         		    tazing = true;
         		    thiefScript.GettingTazed(true);
+        		    if(Network.connections.Length > 0)
+        		    	thiefScript.networkView.RPC("NetGettingTazed",RPCMode.AllBuffered,true);
         		    Movement.SetHiding(true);
         		    //SPILNOGETLYD!!!!
 	
@@ -114,7 +116,10 @@ public class GuardScript : MonoBehaviour
         		        if(tazing)
         		        {
         		        	tazing = false;
+    						DeathCount();
         		        	thiefScript.KillFromTaze(this);
+        		    		if(Network.connections.Length > 0)
+        		        		thiefScript.networkView.RPC("NetKillFromTaze". RPCMode.AllBuffered);
         		        	currentProp = null;
                 			currentPropType = propTypes.nothing;
                 			readyToTaze = false;
