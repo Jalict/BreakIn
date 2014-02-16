@@ -44,6 +44,10 @@ public class CameraScript : MonoBehaviour {
 			newPosition.z = -10;
 			transform.position = newPosition;
 		}
+		if(Players.Length == 1)
+		{
+			transform.position = Players[0].transform.position;
+		}
 
 		//newPosition = targetPlayer.position;
 		//newPosition.z = -10;

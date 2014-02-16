@@ -16,7 +16,7 @@ public class ProgressBar : MonoBehaviour {
 		renderer.material.SetFloat("_Cutoff", Mathf.Lerp(1, 0, progressTime));
 		if(progressTime >= 1)
 		{
-			Destroy(gameObject);
+			//Destroy(gameObject);
 		}
 	}
 

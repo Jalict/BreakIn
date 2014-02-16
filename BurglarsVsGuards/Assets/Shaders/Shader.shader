@@ -38,6 +38,7 @@
 				outcolor.r = (texcolor.r+texcolor.g+texcolor.b)/3;
 				outcolor.g = (texcolor.r+texcolor.g+texcolor.b)/3;
 				outcolor.b = (texcolor.r+texcolor.g+texcolor.b)/3;
+				outcolor.a = texcolor.a;
 
 				return outcolor*_Color;
 			}
