@@ -56,7 +56,7 @@ public class HideNSteal : MonoBehaviour
     
     void OnGUI()
 	{
-		if(!thievesEscaped)GUI.Label(new Rect (Screen.width/2, Screen.height/2, 200,200),"The Burglars scored " + finalThiefScore + "$!",style);
+		if(thievesEscaped)GUI.Label(new Rect (Screen.width/2, Screen.height/2, 200,200),"The Burglars scored " + finalThiefScore + "$!",style);
 	}
 
     private void Awake()
