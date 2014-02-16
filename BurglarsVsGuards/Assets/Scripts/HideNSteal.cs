@@ -5,7 +5,9 @@ public enum propTypes
 {
 	hiding,
 	pickup,
-	car
+	car,
+	thief,
+	nothing
 }
 
 public class HideNSteal : MonoBehaviour
@@ -29,6 +31,8 @@ public class HideNSteal : MonoBehaviour
     public bool readyToHide = false;
     private bool readyToPickup = false;
 
+    public GameObject Bloodpool;
+
     public GameObject progressBar;
 	public GameObject RBButton;
     
@@ -42,6 +46,8 @@ public class HideNSteal : MonoBehaviour
     int finalThiefScore = 0;
 
     bool myRBButtonIsReady = true;
+
+    bool beingTazed = false;
 
 
     // Use this for initialization
@@ -65,6 +71,7 @@ public class HideNSteal : MonoBehaviour
                                 "Untagged",
                                 false);
             	PickupDisplayIcons[i].layer = 4;
+            	PickupDisplayIcons[i].renderer.enabled = false;
             }
         }
 
@@ -74,6 +81,8 @@ public class HideNSteal : MonoBehaviour
             {
             	PickupDisplayIcons[i] = (GameObject)Instantiate(Resources.Load(path), transform.position, Quaternion.identity);
             	PickupDisplayIcons[i].name = "PickupDisplayIcons";
+            	PickupDisplayIcons[i].renderer.enabled = false;
+            	PickupDisplayIcons[i].layer = 4;
             }
             
         }
@@ -96,10 +105,12 @@ public class HideNSteal : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (readyToHide && currentPropType == propTypes.hiding)
+        BeingTazed(beingTazed);
+
+        if (readyToHide && currentPropType == propTypes.hiding && !beingTazed)
             StartHideInProp();
 
-        if (readyToPickup && currentPropType == propTypes.pickup)
+        if (readyToPickup && currentPropType == propTypes.pickup && !beingTazed)
         StartPickupProp();
 
         for (int i = 0; i < 3; i++)
@@ -222,7 +233,6 @@ public class HideNSteal : MonoBehaviour
         // close enough?
         if (Vector2.Distance(transform.position, currentProp.transform.position) < 2)
         {
-
             // start picking up
             if (OuyaInput.GetButtonDown(OuyaButton.RB, Movement.observedPlayer))
             {
@@ -272,7 +282,7 @@ public class HideNSteal : MonoBehaviour
 
                         if (CurrentPropToPickUp.Money < 200)
                         {
-                            PickupDisplayIcons[availableSlot].renderer.material.color = Color.gray;
+                            PickupDisplayIcons[availableSlot].renderer.material.color = Color.blue;
                         }
                         else if (CurrentPropToPickUp.Money < 500)
                         {
@@ -305,6 +315,46 @@ public class HideNSteal : MonoBehaviour
     public void SetCar(CarsToRideIn newScript)
     {
     	CurrentCarToRideIn = newScript;
+    }
+
+    public void GettingTazed(bool newState)
+    {
+    	beingTazed = true;
+    	StartCoroutine(BeingTased());
+    }
+
+    void BeingTazed(bool state)
+    {
+    	if(!beingTazed) return;
+    	Movement.SetHiding (true);
+    }
+
+    IEnumerator BeingTased()
+    {
+        renderer.enabled = !renderer.enabled;
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(BeingTased());
+    }
+
+    public void KillFromTaze()
+    {
+    	if(!beingTazed) return;
+    	if (Network.connections.Length > 0)
+    	{
+    		string path = "Prefabs/" + Bloodpool.name;
+    		Connector.AddEntityReturn(Bloodpool.name, transform.position, Quaternion.identity, path,
+                                "Untagged",
+                                true);
+    	}
+    	
+    	//this.renderer.enabled = false;
+    	//this.collider2D.isTrigger = true;
+    	print("Han er døøøøø'");
+    	Destroy(gameObject);
+    }
+    public bool GetBeingTazed ()
+    {
+    	return beingTazed;
     }
 
     void StartHideInProp()
