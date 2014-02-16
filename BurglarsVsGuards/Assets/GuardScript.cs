@@ -38,7 +38,7 @@ public class GuardScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if(readyToTaze && currentPropType == propTypes.thief)
+		if(readyToTaze && currentPropType == propTypes.thief && currentProp != null)
 		{			
 			if(Vector2.Distance(transform.position, currentProp.transform.position) < 2)
 			{
