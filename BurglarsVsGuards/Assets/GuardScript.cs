@@ -66,6 +66,7 @@ public class GuardScript : MonoBehaviour
         		    ActionButton.transform.renderer.enabled = false;
         		    tazing = true;
         		    thiefScript.GettingTazed(true);
+        		    Movement.SetHiding(true);
         		    //SPILNOGETLYD!!!!
 	
         		    //ProgressBar(true, pos);
@@ -81,6 +82,7 @@ public class GuardScript : MonoBehaviour
         		        //hidingCounterTime = 0;
         		        //ActionButton.transform.renderer.enabled = true;
         		        //ProgressBar(false);
+        		        Movement.SetHiding(false);
         		        if(tazing)
         		        {
         		        	tazing = false;
