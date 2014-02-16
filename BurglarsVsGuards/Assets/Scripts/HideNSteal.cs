@@ -422,7 +422,7 @@ public class HideNSteal : MonoBehaviour
 
 					//hidingCounterTime = 0;
 					if(!hidden)Hide(currentProp);
-					ProgressBar(false);                 
+					ProgressBar(false);
                 }
             }
         } else
@@ -453,7 +453,6 @@ public class HideNSteal : MonoBehaviour
 
     public void Hide(GameObject prop)
     {
-    	print("Hide() called!");
     	hidden = true;
         Movement.SetHiding(true);
         transform.renderer.enabled = false;
