@@ -44,8 +44,10 @@ public class HideNSteal : MonoBehaviour
 
     public int ThiefScore = 0;
     static int finalThiefScore = 0;
-    static int thievesInCar = 0;
+    public static int thievesInCar = 0;
     static bool thievesEscaped = false;
+    static int thievesAlive = 2;
+    bool hidingInCar = false;
 
     bool myRBButtonIsReady = true;
 
@@ -113,7 +115,7 @@ public class HideNSteal : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if(thievesInCar > 1)
+        if(thievesInCar == thievesAlive)
         {
         	if(!thievesEscaped)
         	{
@@ -190,18 +192,7 @@ public class HideNSteal : MonoBehaviour
                 	if (hidingCounterTime >= CurrentPropToHideIn.HidingTime)
                 	{
 	
-                	    // has hidden in prop - her sker magien
-	
-                	    hidden = false;
-                	    Movement.SetHiding(false);
-                	    transform.renderer.enabled = true;
-                	    collider2D.enabled = true;
-                	    CurrentPropToHideIn.SomeoneIsHidingInHere = false;
-                	    ActionButton.transform.renderer.enabled = false;
-                	    hidingCounterTime = 0;
-                	    myRBButtonIsReady = false;
-                	    SetPickupDisplay(true);
-                	    ProgressBar(false);
+                	    Unhide();
                 	}
                 }else
                 {
@@ -370,6 +361,7 @@ public class HideNSteal : MonoBehaviour
     	//this.collider2D.isTrigger = true;
     	//print("Han er døøøøø'");
     	GS.DeathCount();
+    	thievesAlive--;
     	Destroy(progress);
     	Destroy(ActionButton);
     	Destroy(gameObject);
@@ -393,7 +385,6 @@ public class HideNSteal : MonoBehaviour
             {
                 Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
                 ActionButton.transform.renderer.enabled = false;
-                Debug.Log("This one is right");
                 ProgressBar(true, pos);
                 //progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
                 Movement.SetHiding(true);
@@ -435,7 +426,6 @@ public class HideNSteal : MonoBehaviour
         {
             hidingCounterTime = 0;
             ActionButton.transform.renderer.enabled = false;
-            Debug.Log("This one");
         }
     }
 
@@ -466,12 +456,38 @@ public class HideNSteal : MonoBehaviour
 		collider2D.enabled = false;
         if(!CurrentPropToHideIn.isCar)
         	CurrentPropToHideIn.SomeoneIsHidingInHere = true;
+        else
+        {
+        	thievesInCar++;
+        	hidingInCar = true;
+        } 
         Vector3 pos = prop.transform.position + new Vector3(0, 0, -3f);
         ActionButton.transform.position = pos;
         ActionButton.transform.renderer.enabled = true;
         hidingCounterTime = 0;
         myRBButtonIsReady = false;
         SetPickupDisplay(false);
+    }
+
+    public void Unhide()
+    {
+    	// has hidden in prop - her sker magien
+	    if(hidingInCar)
+	    {
+	    	hidingInCar = false;
+	    	thievesInCar--;
+	    }
+	    hidden = false;
+	    Movement.SetHiding(false);
+	    transform.renderer.enabled = true;
+	    collider2D.enabled = true;
+	    CurrentPropToHideIn.SomeoneIsHidingInHere = false;
+	    CurrentPropToHideIn.SetThiefHidingHere(gameObject);
+	    ActionButton.transform.renderer.enabled = false;
+	    hidingCounterTime = 0;
+	    myRBButtonIsReady = false;
+	    SetPickupDisplay(true);
+	    ProgressBar(false);
     }
 
     public void SetCurrentPropAndType(GameObject newProp, propTypes newType)
