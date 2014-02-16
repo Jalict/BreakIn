@@ -8,7 +8,7 @@ public class Connector : MonoBehaviour {
     private bool messaged = false;
     private bool server = false;
     public Transform loader;
-    private string ipconnect = "";
+    private string ipconnect = "123.456.789.123";
 
     void Start() {
         if (!instance) instance = this;
@@ -79,13 +79,13 @@ public class Connector : MonoBehaviour {
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
         GUILayout.Space(5);
-        if (!server && GUILayout.Button("Host")) {
+        if (!server && GUILayout.Button("Host to master server")) {
             Debug.Log("Hosting...");
             Network.InitializeServer(8, 3428, true);
             MasterServer.RegisterHost("Break In NGJ2014", Random.value.ToString());
             server = true;
         }
-        if (!server && GUILayout.Button("Host")) {
+        if (!server && GUILayout.Button("Host LAN")) {
             Debug.Log("Hosting...");
             Network.InitializeServer(8, 3428, true);
             server = true;
@@ -94,8 +94,10 @@ public class Connector : MonoBehaviour {
         if (GUILayout.Button("Join IP: ")) {
             Network.Connect(ipconnect, 3428);
         }
-        GUILayout.Space(15);
+        GUILayout.Space(5);
         ipconnect = GUILayout.TextField(ipconnect);
+
+        //ipconnect = GUI.TextField(new Rect(Screen.width / 2, Screen.height / 2, 175, 60), ipconnect); // show name field
         GUILayout.EndHorizontal();
 
         try {
