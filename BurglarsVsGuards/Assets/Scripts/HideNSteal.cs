@@ -115,6 +115,8 @@ public class HideNSteal : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        //print("Thieves alive: " + thievesAlive);
+        //print("Thieves in car: " + thievesInCar);
         if(thievesInCar == thievesAlive)
         {
         	if(!thievesEscaped)
@@ -418,7 +420,8 @@ public class HideNSteal : MonoBehaviour
 
                     // has hidden in prop - her sker magien
 
-					Hide(currentProp);
+					//hidingCounterTime = 0;
+					if(!hidden)Hide(currentProp);
 					ProgressBar(false);                 
                 }
             }
@@ -450,6 +453,7 @@ public class HideNSteal : MonoBehaviour
 
     public void Hide(GameObject prop)
     {
+    	print("Hide() called!");
     	hidden = true;
         Movement.SetHiding(true);
         transform.renderer.enabled = false;
