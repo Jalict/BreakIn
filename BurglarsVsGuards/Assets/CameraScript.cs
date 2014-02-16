@@ -7,7 +7,7 @@ public class CameraScript : MonoBehaviour {
 	public Transform targetPlayer;
 	Vector3 newPosition;
 	float currentCameraSize = 5;
-	public float extraViewDistance = 9f;
+	float extraViewDistance = 9f;
 	float distanceBetweenPlayers;
 	bool zoomOut = false;
 	float zoomTime = 0;
@@ -30,7 +30,10 @@ public class CameraScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-        Players = GameObject.FindGameObjectsWithTag("Player");
+        if(Network.connections.Length == 0 || Network.isClient)
+            Players = GameObject.FindGameObjectsWithTag("Thief");
+        else if(Network.isServer)
+            Players = GameObject.FindGameObjectsWithTag("Guard");
         if (Players.Length == 0) return;
 
 	    if (Input.GetKeyDown(KeyCode.R))
@@ -46,7 +49,11 @@ public class CameraScript : MonoBehaviour {
 		}
 		if(Players.Length == 1)
 		{
-			transform.position = Players[0].transform.position;
+			Vector3 tmp = Players[0].transform.position;
+			tmp.z = -10;
+			transform.position = tmp;
+			distanceBetweenPlayers = 0;
+			extraViewDistance = 15f;
 		}
 
 		//newPosition = targetPlayer.position;

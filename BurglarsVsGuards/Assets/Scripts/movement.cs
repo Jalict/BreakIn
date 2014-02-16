@@ -46,14 +46,18 @@ public class movement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-        OuyaInput.UpdateControllers();
+        if(!hiding)
+        {
+            OuyaInput.UpdateControllers();
 
 
-		MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer),
-            OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer),
-            0);
-        if(!hiding) rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer) * Speed * Time.deltaTime,
+            MoveVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer),
+                OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer),
+                0);
+            rigidbody2D.AddForce(new Vector2(OuyaInput.GetAxis(OuyaAxis.LX, observedPlayer) * Speed * Time.deltaTime,
                                        OuyaInput.GetAxis(OuyaAxis.LY, observedPlayer) * Speed * Time.deltaTime));
+        
+        
 
         //transform.Translate(MoveVector * Speed * Time.deltaTime, Space.World);
         //print(MoveVector);
@@ -70,10 +74,10 @@ public class movement : MonoBehaviour {
         //Quaternion rotation = Quaternion.LookRotation(LookVector);
         //transform.rotation = rotation;
 
-        LookVector.z = transform.position.z;
+        //LookVector.z = transform.position.z;
 
         if(LookVector.magnitude > 0)
             transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(transform.eulerAngles.z,Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg,turnSpeed));
-
+        }
 	}
 }
