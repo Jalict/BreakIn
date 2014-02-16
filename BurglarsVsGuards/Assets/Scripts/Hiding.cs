@@ -9,7 +9,7 @@ public class Hiding : MonoBehaviour
     public GameObject[] Inventory = new GameObject[3];
     public GameObject currentProp = null;
     private PropsToHideIn CurrentPropToHideIn = null;
-    private PropsToPickUp CurrentPropToPickUp = null;
+    
 
     private float hidingCounterTime = 0;
     bool hidden = false;

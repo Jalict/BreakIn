@@ -12,7 +12,7 @@ public enum propTypes
 
 public class HideNSteal : MonoBehaviour
 {
-
+	public GUIStyle style;
     public movement Movement;
 
     public GameObject[] Inventory = new GameObject[3];
@@ -43,7 +43,9 @@ public class HideNSteal : MonoBehaviour
     public Vector3[] Offset = new Vector3[3];
 
     public int ThiefScore = 0;
-    int finalThiefScore = 0;
+    static int finalThiefScore = 0;
+    static int thievesInCar = 0;
+    static bool thievesEscaped = false;
 
     bool myRBButtonIsReady = true;
 
@@ -51,6 +53,12 @@ public class HideNSteal : MonoBehaviour
 
 
     // Use this for initialization
+    
+    void OnGUI()
+	{
+		if(!thievesEscaped)GUI.Label(new Rect (Screen.width/2, Screen.height/2, 200,200),"The Burglars scored " + finalThiefScore + "$!",style);
+	}
+
     private void Awake()
     {
 
@@ -105,6 +113,14 @@ public class HideNSteal : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if(thievesInCar > 1)
+        {
+        	if(!thievesEscaped)
+        	{
+        		thievesEscaped = true;
+        	}
+        }
+
         BeingTazed(beingTazed);
 
         if (readyToHide && currentPropType == propTypes.hiding && !beingTazed)
@@ -336,20 +352,26 @@ public class HideNSteal : MonoBehaviour
         StartCoroutine(BeingTased());
     }
 
-    public void KillFromTaze()
+    public void KillFromTaze(GuardScript GS)
     {
     	if(!beingTazed) return;
+    	string path = "Prefabs/" + Bloodpool.name;
     	if (Network.connections.Length > 0)
     	{
-    		string path = "Prefabs/" + Bloodpool.name;
-    		Connector.AddEntityReturn(Bloodpool.name, transform.position, Quaternion.identity, path,
+    		Connector.AddEntityReturn(Bloodpool.name, transform.position - new Vector3(0,0,3), Quaternion.identity, path,
                                 "Untagged",
                                 true);
+    	}else
+    	{
+    		Instantiate(Resources.Load(path), transform.position - new Vector3(0,0,3), Quaternion.identity);
     	}
     	
     	//this.renderer.enabled = false;
     	//this.collider2D.isTrigger = true;
-    	print("Han er døøøøø'");
+    	//print("Han er døøøøø'");
+    	GS.DeathCount();
+    	Destroy(progress);
+    	Destroy(ActionButton);
     	Destroy(gameObject);
     }
     public bool GetBeingTazed ()
@@ -548,6 +570,8 @@ public class HideNSteal : MonoBehaviour
     {
     	int tmp = ThiefScore;
     	ThiefScore = 0;
+    	for (int i = 0; i < 3; i++)
+            Inventory[i] = null;
     	return tmp;
     }
 
