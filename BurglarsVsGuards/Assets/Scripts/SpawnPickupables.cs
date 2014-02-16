@@ -12,7 +12,7 @@ public class SpawnPickupables : MonoBehaviour
     {
         for (int i = 0; i < SpawnPoints.Length; i++)
         {
-            int random = Random.Range(0, Pickupables.Length);
+            int random = Random.Range(0, Pickupables.Length-1);
 
             string path = "Prefabs/" + Pickupables[random].name;
 
