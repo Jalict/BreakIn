@@ -43,7 +43,9 @@ public class CameraScript : MonoBehaviour {
         if (Players.Length == 0) return;
 
 	    if (Input.GetKeyDown(KeyCode.R))
-	        Application.LoadLevel(0);
+            Application.LoadLevel(1);
+        if (Input.GetKeyDown(KeyCode.T))
+            Application.LoadLevel(0);
 
 		//Camera size and position depending on players
 		if(Players.Length == 2)
