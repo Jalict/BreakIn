@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum propTypes
+public enum propTypes
 {
 	hiding,
-	pickup
+	pickup,
+	car
 }
 
 public class HideNSteal : MonoBehaviour
@@ -18,9 +19,11 @@ public class HideNSteal : MonoBehaviour
 
     private PropsToHideIn CurrentPropToHideIn = null;
     private PropsToPickUp CurrentPropToPickUp = null;
+    private CarsToRideIn CurrentCarToRideIn = null;
 
     private float hidingCounterTime = 0;
     private float pickupCounterTime = 0;
+    private float ridingCounterTime = 0;
     bool hidden = false;
 
     public bool readyToHide = false;
@@ -36,15 +39,18 @@ public class HideNSteal : MonoBehaviour
     public Vector3[] Offset = new Vector3[3];
 
     public int ThiefScore = 0;
+    int finalThiefScore = 0;
 
     bool myRBButtonIsReady = true;
 
 
     // Use this for initialization
-    private void Start()
+    private void Awake()
     {
 
-        progress = null;
+        //progress = null;
+        progress = (GameObject)Instantiate(progressBar, transform.position, Quaternion.identity);
+        progress.renderer.enabled = false;
 
         Offset[0] = new Vector3(-0.4f, -0.81f, 0);
         Offset[1] = new Vector3(-0f, -0.81f, 0);
@@ -54,6 +60,7 @@ public class HideNSteal : MonoBehaviour
 
         ActionButton = (GameObject)Instantiate(RBButton, transform.position, Quaternion.identity);
         ActionButton.transform.renderer.enabled = false;
+        Debug.Log("This one");
 
         if (PickupDisplayIcons[2] == null)
             Debug.Log("ERROR - needs PickupDisplayIcons");
@@ -90,7 +97,10 @@ public class HideNSteal : MonoBehaviour
             {
                 Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
                 ActionButton.transform.renderer.enabled = false;
-                progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
+                ProgressBar(true, pos);
+                //progress.transform.position = pos;
+                //progress.renderer.enabled = true;
+                //progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
             }
 
             if (OuyaInput.GetButtonUp(OuyaButton.RB, Movement.observedPlayer))
@@ -99,36 +109,71 @@ public class HideNSteal : MonoBehaviour
                 {
                     hidingCounterTime = 0;
                     ActionButton.transform.renderer.enabled = true;
-                    Destroy(progress);
+                    ProgressBar(false);
+                    //progress.GetComponent<ProgressBar>().SetProgressTime(hidingCounterTime / CurrentPropToHideIn.HidingTime);
+                    //Destroy(progress);
                 }
             }
 
             if (OuyaInput.GetButton(OuyaButton.RB, Movement.observedPlayer) && myRBButtonIsReady)
             {
                 hidingCounterTime += Time.deltaTime;
-                
+                bool hideNotRide = false;
                 if (progress != null)
                 {
-                    progress.GetComponent<ProgressBar>().SetProgressTime(hidingCounterTime / CurrentPropToHideIn.HidingTime);
+                    if(currentPropType == propTypes.hiding)
+                    {
+                    	SetProgressTime(hidingCounterTime / CurrentPropToHideIn.HidingTime);
+                    	hideNotRide = true;
+                    }
+                    else if(currentPropType == propTypes.car)
+                    {
+                    	SetProgressTime(ridingCounterTime / CurrentCarToRideIn.RidingTime);
+                    	hideNotRide = false;
+                    }
+                    
+                    //progress.GetComponent<ProgressBar>().SetProgressTime(hidingCounterTime / CurrentPropToHideIn.HidingTime);
                 }
 
 
                 // hiding time reached
-                if (hidingCounterTime >= CurrentPropToHideIn.HidingTime)
+                if(hideNotRide)
                 {
-
-                    // has hidden in prop - her sker magien
-
-                    hidden = false;
-                    Movement.SetHiding(false);
-                    transform.renderer.enabled = true;
-                    collider2D.enabled = true;
-                    CurrentPropToHideIn.SomeoneIsHidingInHere = false;
-                    ActionButton.transform.renderer.enabled = false;
-                    hidingCounterTime = 0;
-                    myRBButtonIsReady = false;
-                    SetPickupDisplay(true);
+                	if (hidingCounterTime >= CurrentPropToHideIn.HidingTime)
+                	{
+	
+                	    // has hidden in prop - her sker magien
+	
+                	    hidden = false;
+                	    Movement.SetHiding(false);
+                	    transform.renderer.enabled = true;
+                	    collider2D.enabled = true;
+                	    CurrentPropToHideIn.SomeoneIsHidingInHere = false;
+                	    ActionButton.transform.renderer.enabled = false;
+                	    hidingCounterTime = 0;
+                	    myRBButtonIsReady = false;
+                	    SetPickupDisplay(true);
+                	    ProgressBar(false);
+                	}
+                }else
+                {
+                	if (ridingCounterTime >= CurrentCarToRideIn.RidingTime)
+                	{
+	
+                	    // has hidden in prop - her sker magien
+	
+                	    hidden = false;
+                	    Movement.SetHiding(false);
+                	    transform.renderer.enabled = true;
+                	    collider2D.enabled = true;
+                	    ActionButton.transform.renderer.enabled = false;
+                	    ridingCounterTime = 0;
+                	    myRBButtonIsReady = false;
+                	    SetPickupDisplay(true);
+                	    ProgressBar(false);
+                	}
                 }
+                
             }
         }
     }
@@ -162,7 +207,8 @@ public class HideNSteal : MonoBehaviour
             {
                 Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
                 ActionButton.transform.renderer.enabled = false;
-                progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
+                ProgressBar(true, pos);
+                //progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
             }
 
             if (OuyaInput.GetButtonUp(OuyaButton.RB, Movement.observedPlayer))
@@ -171,7 +217,8 @@ public class HideNSteal : MonoBehaviour
                 {
                     ActionButton.transform.renderer.enabled = true;
                     pickupCounterTime = 0;
-                    Destroy(progress);
+                    ProgressBar(false);
+                    //Destroy(progress);
                 }
             }
 
@@ -223,12 +270,20 @@ public class HideNSteal : MonoBehaviour
                         CurrentPropToPickUp.HasBeenPickedUp = true;
 
                         pickupCounterTime = 0;
+                        ProgressBar(false);
+                        //currentProp = null;
+                        readyToPickup = false;
                     }
                 }
             }
         }
         else
             pickupCounterTime = 0;
+    }
+
+    public void SetCar(CarsToRideIn newScript)
+    {
+    	CurrentCarToRideIn = newScript;
     }
 
     void StartHideInProp()
@@ -245,7 +300,9 @@ public class HideNSteal : MonoBehaviour
             {
                 Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
                 ActionButton.transform.renderer.enabled = false;
-                progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
+                Debug.Log("This one is right");
+                ProgressBar(true, pos);
+                //progress = (GameObject)Instantiate(progressBar, pos, Quaternion.identity);
                 Movement.SetHiding(true);
             }
 
@@ -255,7 +312,8 @@ public class HideNSteal : MonoBehaviour
                 {
                     hidingCounterTime = 0;
                     ActionButton.transform.renderer.enabled = true;
-                    Destroy(progress);
+                    ProgressBar(false);
+                    //Destroy(progress);
                     Movement.SetHiding(false);
                 }
             }
@@ -276,27 +334,80 @@ public class HideNSteal : MonoBehaviour
 
                     // has hidden in prop - her sker magien
 
-					hidden = true;
-                    Movement.SetHiding(true);
-                    transform.renderer.enabled = false;
-            		collider2D.enabled = false;
-                    CurrentPropToHideIn.SomeoneIsHidingInHere = true;
-                    Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
-                    ActionButton.transform.position = pos;
-                    ActionButton.transform.renderer.enabled = true;
-                    hidingCounterTime = 0;
-                    myRBButtonIsReady = false;
-                    SetPickupDisplay(false);                    
+					Hide(currentProp);
+					ProgressBar(false);                 
                 }
             }
         } else
         {
             hidingCounterTime = 0;
             ActionButton.transform.renderer.enabled = false;
+            Debug.Log("This one");
         }
     }
 
-    void SetPickupDisplay(bool newState)
+    public void SetProgressTime (float newTime)
+    {
+    	progress.GetComponent<ProgressBar>().SetProgressTime(newTime);
+    }
+
+    public void ProgressBar(bool newState, Vector3 newPosition)
+    {
+    	progress.renderer.enabled = newState;
+    	if(!newState) progress.GetComponent<ProgressBar>().SetProgressTime(0f);
+    	else progress.transform.position = newPosition;
+    }
+
+    public void ProgressBar(bool newState)
+    {
+    	progress.renderer.enabled = newState;
+    	if(!newState) progress.GetComponent<ProgressBar>().SetProgressTime(0f);
+    	else Debug.Log("Did you forget a new position for the progress bar?");
+    }
+
+    public void Hide(GameObject prop)
+    {
+    	hidden = true;
+        Movement.SetHiding(true);
+        transform.renderer.enabled = false;
+		collider2D.enabled = false;
+        if(!CurrentPropToHideIn.isCar)
+        	CurrentPropToHideIn.SomeoneIsHidingInHere = true;
+        Vector3 pos = prop.transform.position + new Vector3(0, 0, -3f);
+        ActionButton.transform.position = pos;
+        ActionButton.transform.renderer.enabled = true;
+        hidingCounterTime = 0;
+        myRBButtonIsReady = false;
+        SetPickupDisplay(false);
+    }
+
+    public void SetCurrentPropAndType(GameObject newProp, propTypes newType)
+    {
+    	currentProp = newProp;
+    	currentPropType = newType;
+    }
+
+    public GameObject GetActionButton()
+    {
+    	return ActionButton;
+    }
+
+    public propTypes GetCurrentPropType()
+    {
+    	return currentPropType;
+    }
+
+    public GameObject GetCurrentProp()
+    {
+    	return currentProp;
+    }
+
+    public GameObject GetProgress()
+    {
+    	return progress;
+    }
+
+    public void SetPickupDisplay(bool newState)
     {
 		int availableSlot = -1;
 		for (int i = 0 ; i < 3; i++)
@@ -312,12 +423,17 @@ public class HideNSteal : MonoBehaviour
         if (coll.gameObject.tag == "CanHideIn")
         {
             PropsToHideIn theThingYouCanHideIn = coll.gameObject.GetComponent<PropsToHideIn>() as PropsToHideIn;
+
+            if(theThingYouCanHideIn.isCar)
+            {
+            	finalThiefScore += DepositCash();
+            }
+            
             if (theThingYouCanHideIn != null)
             {
             	if (!coll.gameObject.GetComponent<PropsToHideIn>().SomeoneIsHidingInHere)
             	{
-            	    currentProp = coll.gameObject;
-            	    currentPropType = propTypes.hiding;
+            	    SetCurrentPropAndType(coll.gameObject, propTypes.hiding);
             	    CurrentPropToHideIn = currentProp.GetComponent<PropsToHideIn>();
             	    readyToHide = true;
             	    Vector3 pos = currentProp.transform.position + new Vector3(0, 0, -3f);
@@ -357,9 +473,16 @@ public class HideNSteal : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    public int DepositCash()
     {
-        GUI.Label(new Rect(Screen.width / 2, Screen.height - 130, 500, 60), gameObject.name + " score:" + ThiefScore);
-        GUI.Label(new Rect(Screen.width / 2, Screen.height - 100, 500, 60), "Slot1: " + Inventory[0]);
+    	int tmp = ThiefScore;
+    	ThiefScore = 0;
+    	return tmp;
     }
+
+    //void OnGUI()
+    //{
+    //    GUI.Label(new Rect(Screen.width / 2, Screen.height - 130, 500, 60), gameObject.name + " score:" + ThiefScore);
+    //    GUI.Label(new Rect(Screen.width / 2, Screen.height - 100, 500, 60), "Slot1: " + Inventory[0]);
+    //}
 }
