@@ -30,7 +30,10 @@ public class CameraScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-        Players = GameObject.FindGameObjectsWithTag("Player");
+        if(Network.connections.Length == 0 || Network.isClient)
+            Players = GameObject.FindGameObjectsWithTag("Thief");
+        else if(Network.isServer)
+            Players = GameObject.FindGameObjectsWithTag("Guard");
         if (Players.Length == 0) return;
 
 	    if (Input.GetKeyDown(KeyCode.R))

@@ -35,7 +35,7 @@ public class Connector : MonoBehaviour {
     public static GameObject AddEntityReturn(string name, Vector3 pos, Quaternion rot, string prefab, string id, bool isStatic)
     {
         GameObject t = ((GameObject)Instantiate(Resources.Load(prefab),pos,rot));
-        t.gameObject.tag = id;
+        //t.gameObject.tag = id;
 
         t.AddComponent<NetworkView>();
         t.transform.networkView.viewID = Network.AllocateViewID();
