@@ -65,7 +65,6 @@ public class movement : MonoBehaviour {
         Vector3 LookVector = new Vector3(OuyaInput.GetAxis(OuyaAxis.RX, observedPlayer),
             OuyaInput.GetAxis(OuyaAxis.RY, observedPlayer),
             0);
-    }
 
         //Quaternion rot = Quaternion.LookRotation(LookVector);
 		//rot *= Quaternion.FromToRotation(Vector3.forward, Vector3.right);
