@@ -77,11 +77,17 @@ public class Connector : MonoBehaviour {
 
         GUILayout.Space(5);
         GUILayout.BeginVertical();
+        GUILayout.BeginHorizontal();
         GUILayout.Space(5);
         if (!server && GUILayout.Button("Host")) {
             Debug.Log("Hosting...");
             Network.InitializeServer(8, 3428, true);
             MasterServer.RegisterHost("Break In NGJ2014", Random.value.ToString());
+            server = true;
+        }
+        if (!server && GUILayout.Button("Host")) {
+            Debug.Log("Hosting...");
+            Network.InitializeServer(8, 3428, true);
             server = true;
         }
         GUILayout.Space(10);
@@ -90,6 +96,7 @@ public class Connector : MonoBehaviour {
         }
         GUILayout.Space(15);
         ipconnect = GUILayout.TextField(ipconnect);
+        GUILayout.EndHorizontal();
         HostData[] data = MasterServer.PollHostList();
 
 	    foreach(HostData element in data)
